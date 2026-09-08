@@ -1,0 +1,10 @@
+# robots.txt for Jeevanjyot Nature Cure Ayurvedic Clinic
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /patient
+Disallow: /patient/
+Disallow: /api/
+
+Sitemap: https://jeevanjyotayurveda.com/sitemap.xml

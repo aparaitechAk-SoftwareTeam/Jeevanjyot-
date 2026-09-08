@@ -1,0 +1,438 @@
+﻿import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
+import TrustHighlights from "./components/TrustHighlights";
+import AboutSection from "./components/AboutSection";
+import TreatmentSection from "./components/TreatmentSection";
+import PanchakarmaSection from "./components/PanchakarmaSection";
+import SpecializedCareSection from "./components/SpecializedCareSection";
+import WhyChooseSection from "./components/WhyChooseSection";
+import DoctorSection from "./components/DoctorSection";
+import PatientJourneySection from "./components/PatientJourneySection";
+import GallerySection from "./components/GallerySection";
+import KnowledgeCenterSection from "./components/KnowledgeCenterSection";
+import AppointmentSection from "./components/AppointmentSection";
+import TestimonialsFAQSection from "./components/TestimonialsFAQSection";
+import ContactSection from "./components/ContactSection";
+import Footer from "./components/Footer";
+
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Menu,
+  X,
+  Phone,
+  MessageCircle,
+  CalendarCheck,
+  ArrowRight,
+  Leaf,
+  HeartPulse,
+  Sparkles,
+} from "lucide-react";
+
+import logo from "./assets/logo.png";
+import doctorImage from "./assets/doctor.png";
+
+function ProtectedAdminRoute({ children }) {
+  const token = localStorage.getItem("jeevanjyot_admin_token");
+
+  if (!token) {
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  return children;
+}
+
+function HomePage() {
+  const [mobileMenu, setMobileMenu] = useState(false);
+
+  const navItems = [
+    "Home",
+    "About",
+    "Treatments",
+    "Panchakarma",
+    "Doctor",
+    "Knowledge Center",
+    "Gallery",
+    "Contact",
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#F7F3E8] text-[#17231C]">
+
+      {/* ================= ANNOUNCEMENT BAR ================= */}
+      <div className="bg-[#0B291D] px-4 py-2.5 text-center text-sm text-white">
+        <div className="mx-auto flex max-w-7xl items-center justify-center gap-2">
+          <Leaf size={15} />
+          <span>
+            Ayurveda &bull; Panchakarma &bull; Diabetes & Infertility Care
+          </span>
+        </div>
+      </div>
+
+      {/* ================= NAVBAR ================= */}
+      <header className="sticky top-0 z-50 border-b border-[#123C2A]/10 bg-[#F7F3E8]/95 backdrop-blur-xl">
+        <nav className="mx-auto flex h-[82px] max-w-7xl items-center justify-between px-5 lg:px-8">
+
+          {/* Logo */}
+          <a href="#home" className="flex items-center gap-3">
+            <img
+              src={logo}
+              alt="Jeevanjyot Logo"
+              className="h-14 w-14 object-contain"
+            />
+
+            <div className="hidden sm:block">
+              <h1 className="text-xl font-bold tracking-tight text-[#123C2A]">
+                Jeevanjyot
+              </h1>
+
+              <p className="max-w-[230px] text-[10px] leading-3 text-[#66736B]">
+                Nature Cure Ayurvedic Clinic &
+                Panchakarma Centre
+              </p>
+            </div>
+          </a>
+
+          {/* Desktop Navigation */}
+          <div className="hidden items-center gap-6 xl:flex">
+            {navItems.map((item, index) => (
+              <a
+                key={item}
+                href={`#${item.toLowerCase().replaceAll(" ", "-")}`}
+                className={`text-sm font-medium transition-colors duration-300 ${
+                  index === 0
+                    ? "text-[#123C2A]"
+                    : "text-[#66736B] hover:text-[#123C2A]"
+                }`}
+              >
+                {item}
+              </a>
+            ))}
+          </div>
+
+          {/* Desktop CTA */}
+          <div className="hidden items-center gap-3 lg:flex">
+            <a
+              href="tel:9822510456"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-[#123C2A]/15 text-[#123C2A] transition hover:bg-[#123C2A] hover:text-white"
+            >
+              <Phone size={18} />
+            </a>
+
+            <a
+              href="https://wa.me/919822510456"
+              target="_blank"
+              rel="noreferrer"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-[#123C2A]/15 text-[#123C2A] transition hover:bg-[#123C2A] hover:text-white"
+            >
+              <MessageCircle size={18} />
+            </a>
+
+            <a
+              href="#book-appointment"
+              className="flex items-center gap-2 rounded-full bg-[#123C2A] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[#123C2A]/15 transition hover:bg-[#0B291D]"
+            >
+              Book Appointment
+              <ArrowRight size={16} />
+            </a>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenu(!mobileMenu)}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-[#123C2A]/15 text-[#123C2A] xl:hidden"
+          >
+            {mobileMenu ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </nav>
+
+        {/* Mobile Menu */}
+        {mobileMenu && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="border-t border-[#123C2A]/10 bg-[#F7F3E8] px-5 py-5 xl:hidden"
+          >
+            <div className="flex flex-col gap-1">
+              {navItems.map((item) => (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase().replaceAll(" ", "-")}`}
+                  onClick={() => setMobileMenu(false)}
+                  className="rounded-xl px-4 py-3 text-sm font-medium text-[#66736B] transition hover:bg-white hover:text-[#123C2A]"
+                >
+                  {item}
+                </a>
+              ))}
+
+              <a
+                href="#book-appointment"
+                onClick={() => setMobileMenu(false)}
+                className="mt-3 flex items-center justify-center gap-2 rounded-full bg-[#123C2A] px-5 py-3.5 font-semibold text-white"
+              >
+                <CalendarCheck size={18} />
+                Book Appointment
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </header>
+
+      {/* ================= HERO ================= */}
+      <main id="home">
+
+        <section className="relative overflow-hidden">
+
+          {/* Decorative background */}
+          <div className="pointer-events-none absolute -left-32 top-20 h-72 w-72 rounded-full bg-[#789B82]/15 blur-3xl" />
+
+          <div className="pointer-events-none absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-[#C5A45D]/10 blur-3xl" />
+
+          <div className="mx-auto grid min-h-[calc(100vh-110px)] max-w-7xl items-center gap-12 px-5 py-14 lg:grid-cols-2 lg:px-8 lg:py-20">
+
+            {/* LEFT */}
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7 }}
+              className="relative z-10"
+            >
+
+              {/* Badge */}
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#789B82]/30 bg-white/70 px-4 py-2 text-sm font-medium text-[#123C2A] shadow-sm backdrop-blur">
+                <Sparkles size={16} />
+                Authentic Ayurveda & Panchakarma Care
+              </div>
+
+              {/* Heading */}
+              <h2 className="max-w-2xl text-4xl font-semibold leading-[1.08] tracking-tight text-[#0B291D] sm:text-5xl lg:text-6xl">
+                Restore Your Health,
+                <span className="mt-2 block font-serif italic text-[#789B82]">
+                  Naturally with Ayurveda
+                </span>
+              </h2>
+
+              {/* Description */}
+              <p className="mt-6 max-w-xl text-base leading-7 text-[#66736B] sm:text-lg">
+                Personalized Ayurvedic and Panchakarma care focused on
+                supporting your journey towards better health and
+                natural wellness.
+              </p>
+
+              {/* Specialty chips */}
+              <div className="mt-7 flex flex-wrap gap-2">
+                {[
+                  "Ayurveda",
+                  "Panchakarma",
+                  "Diabetes Care",
+                  "Infertility Care",
+                ].map((item) => (
+                  <span
+                    key={item}
+                    className="rounded-full border border-[#123C2A]/10 bg-white px-4 py-2 text-xs font-medium text-[#123C2A] shadow-sm"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+
+              {/* CTA */}
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+
+                <a
+                  href="#book-appointment"
+                  className="flex items-center justify-center gap-2 rounded-full bg-[#123C2A] px-7 py-4 font-semibold text-white shadow-xl shadow-[#123C2A]/15 transition hover:-translate-y-0.5 hover:bg-[#0B291D]"
+                >
+                  <CalendarCheck size={18} />
+                  Book Appointment
+                  <ArrowRight size={17} />
+                </a>
+
+                <a
+                  href="#treatments"
+                  className="flex items-center justify-center gap-2 rounded-full border border-[#123C2A]/15 bg-white px-7 py-4 font-semibold text-[#123C2A] transition hover:bg-[#123C2A] hover:text-white"
+                >
+                  Explore Treatments
+                </a>
+
+              </div>
+
+              {/* Trust line */}
+              <div className="mt-9 flex items-center gap-3 text-sm text-[#66736B]">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#789B82]/15 text-[#123C2A]">
+                  <HeartPulse size={18} />
+                </div>
+
+                <span>
+                  Personalized care &bull; Natural wellness &bull; Patient-focused guidance
+                </span>
+              </div>
+
+            </motion.div>
+
+            {/* RIGHT IMAGE */}
+            <motion.div
+              initial={{ opacity: 0, x: 40, scale: 0.96 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="relative mx-auto w-full max-w-xl"
+            >
+
+              <div className="absolute -inset-4 rounded-[40px] bg-[#789B82]/10 rotate-2" />
+
+              <div className="relative overflow-hidden rounded-[32px] border-8 border-white bg-white shadow-2xl">
+
+                <img
+                  src={doctorImage}
+                  alt="Dr. Jeevan Atole at Jeevanjyot Ayurvedic Clinic"
+                  className="h-[500px] w-full object-cover object-center sm:h-[600px]"
+                />
+
+                <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-white/30 bg-[#0B291D]/90 p-4 text-white backdrop-blur-md">
+
+                  <p className="text-xs uppercase tracking-[0.2em] text-[#C5A45D]">
+                    Jeevanjyot
+                  </p>
+
+                  <h3 className="mt-1 text-lg font-semibold">
+                    Nature Cure Ayurvedic Clinic
+                  </h3>
+
+                  <p className="mt-1 text-sm text-white/70">
+                    Panchakarma &bull; Diabetes &bull; Infertility Care
+                  </p>
+
+                </div>
+              </div>
+
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="absolute -bottom-6 -left-3 hidden rounded-2xl border border-white bg-white p-4 shadow-xl sm:block"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#789B82]/15 text-[#123C2A]">
+                    <Leaf size={21} />
+                  </div>
+
+                  <div>
+                    <p className="text-xs text-[#66736B]">
+                      Wellness Approach
+                    </p>
+                    <p className="font-semibold text-[#123C2A]">
+                      Natural & Personalized
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+            </motion.div>
+
+          </div>
+        </section>
+
+        <TrustHighlights />
+
+        <AboutSection />
+
+        <TreatmentSection />
+
+        <PanchakarmaSection />
+
+        <SpecializedCareSection />
+
+        <WhyChooseSection />
+
+        <DoctorSection />
+
+        <PatientJourneySection />
+
+        <KnowledgeCenterSection />
+
+        <AppointmentSection />
+
+        <GallerySection />
+
+        <TestimonialsFAQSection />
+
+        <ContactSection />
+
+        <Footer />
+
+      </main>
+
+      {/* ================= MOBILE ACTION BAR ================= */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#123C2A]/10 bg-white/95 p-2 shadow-2xl backdrop-blur-xl lg:hidden">
+        <div className="grid grid-cols-3 gap-2">
+
+          <a
+            href="tel:9822510456"
+            className="flex flex-col items-center justify-center gap-1 rounded-xl py-2 text-[#123C2A]"
+          >
+            <Phone size={19} />
+            <span className="text-[11px] font-semibold">Call</span>
+          </a>
+
+          <a
+            href="https://wa.me/919822510456"
+            target="_blank"
+            rel="noreferrer"
+            className="flex flex-col items-center justify-center gap-1 rounded-xl py-2 text-[#123C2A]"
+          >
+            <MessageCircle size={19} />
+            <span className="text-[11px] font-semibold">WhatsApp</span>
+          </a>
+
+          <a
+            href="#book-appointment"
+            className="flex flex-col items-center justify-center gap-1 rounded-xl bg-[#123C2A] py-2 text-white"
+          >
+            <CalendarCheck size={19} />
+            <span className="text-[11px] font-semibold">Book</span>
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+
+        {/* Public Website */}
+        <Route path="/" element={<HomePage />} />
+
+        {/* Admin Login */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+
+        {/* Protected Admin Dashboard */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedAdminRoute>
+              <AdminDashboard />
+            </ProtectedAdminRoute>
+          }
+        />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;

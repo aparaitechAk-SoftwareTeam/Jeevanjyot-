@@ -1,0 +1,205 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "treatments": "Treatments",
+    "panchakarma": "Panchakarma",
+    "doctor": "Doctor",
+    "knowledgeCenter": "Knowledge Center",
+    "gallery": "Gallery",
+    "contact": "Contact",
+    "bookAppointment": "Book Appointment",
+    "language": "Language",
+    "patientPortal": "Patient Portal",
+    "adminLogin": "Admin Login",
+    "moreOptions": "More Options"
+  },
+  "announcement": {
+    "text": "Ayurveda • Panchakarma • Diabetes & Infertility Care"
+  },
+  "hero": {
+    "badge": "Holistic Healing & Wellness",
+    "titleLine1": "Authentic Ayurvedic Care &",
+    "titleLine2": "Panchakarma Therapy",
+    "description": "Personalized Ayurvedic consultation, traditional Panchakarma detoxification, and natural health care guided by experienced doctors in Pune.",
+    "bookBtn": "Book Appointment",
+    "callBtn": "Call Clinic",
+    "experience": "Years Experience",
+    "patientsServed": "Patients Cured",
+    "timing": "Mon - Sat: 10:00 AM - 9:00 PM"
+  },
+  "trust": {
+    "item1": "Certified Doctors",
+    "item2": "Pure Herbal Formulations",
+    "item3": "Personalized Therapies",
+    "item4": "Holistic Detoxification"
+  },
+  "about": {
+    "tag": "ABOUT JEEVANJYOT",
+    "heading": "Dedicated to Natural Healing & Authentic Ayurveda",
+    "paragraph1": "Jeevanjyot Nature Cure Ayurvedic Clinic & Panchakarma Centre is committed to restoring health naturally. We blend traditional Ayurvedic wisdom with modern clinical diagnosis.",
+    "paragraph2": "Our specialized treatments focus on root-cause healing for chronic ailments, lifestyle disorders, Panchakarma detox, diabetes management, and infertility care.",
+    "stat1Label": "Happy Patients",
+    "stat1Value": "5000+",
+    "stat2Label": "Success Rate",
+    "stat2Value": "98%",
+    "stat3Label": "Expert Doctors",
+    "stat3Value": "15+ Yrs"
+  },
+  "treatments": {
+    "tag": "OUR TREATMENTS",
+    "heading": "Comprehensive Ayurvedic Solutions",
+    "subtitle": "Customized treatment plans tailored to your unique body constitution (Prakriti).",
+    "ayurvedaTitle": "General Ayurveda",
+    "ayurvedaDesc": "Natural herbal therapies for digestive, respiratory, skin, and joint ailments.",
+    "panchakarmaTitle": "Panchakarma Detox",
+    "panchakarmaDesc": "Deep body purification and rejuvenation to remove accumulated toxins (Ama).",
+    "diabetesTitle": "Diabetes Management",
+    "diabetesDesc": "Holistic blood sugar control through herbal medicines, diet, and lifestyle care.",
+    "infertilityTitle": "Infertility & Gynae Care",
+    "infertilityDesc": "Ayurvedic reproductive health treatments for both men and women.",
+    "viewDetails": "View Details"
+  },
+  "panchakarma": {
+    "tag": "PANCHAKARMA THERAPIES",
+    "heading": "5-Fold Rejuvenation & Purification",
+    "subtitle": "Traditional Panchakarma procedures performed under medical supervision.",
+    "vamana": "Vamana (Emesis)",
+    "virechana": "Virechana (Purgation)",
+    "basti": "Basti (Enema Therapy)",
+    "nasya": "Nasya (Nasal Detox)",
+    "raktamokshana": "Raktamokshana (Bloodletting)",
+    "learnMore": "Learn More"
+  },
+  "specialized": {
+    "tag": "SPECIALIZED CARE",
+    "heading": "Targeted Ayurvedic Therapies",
+    "subtitle": "Specialized health programs for chronic health conditions.",
+    "diabetesCare": "Diabetes & Metabolic Care",
+    "infertilityCare": "Infertility & Reproductive Care",
+    "jointCare": "Joint & Spine Disorders",
+    "skinCare": "Skin & Allergy Care"
+  },
+  "whyChoose": {
+    "tag": "WHY CHOOSE US",
+    "heading": "Why Patients Trust Jeevanjyot",
+    "item1Title": "Root-Cause Diagnosis",
+    "item1Desc": "We diagnose the underlying Dosha imbalance rather than suppressing symptoms.",
+    "item2Title": "Experienced Doctors",
+    "item2Desc": "Consultations with certified BAMS Ayurvedic physicians with deep experience.",
+    "item3Title": "Authentic Medicines",
+    "item3Desc": "100% pure, quality-tested Ayurvedic herbs and classical formulations.",
+    "item4Title": "Hygienic Therapy Rooms",
+    "item4Desc": "Clean, sanitized Panchakarma suites designed for patient comfort."
+  },
+  "doctor": {
+    "tag": "OUR CHIEF DOCTOR",
+    "heading": "Meet Dr. Jeevan Atole",
+    "name": "Dr. Jeevan Atole",
+    "qualification": "B.A.M.S. - Chief Ayurvedic Physician & Panchakarma Specialist",
+    "experienceLabel": "Experience",
+    "experienceValue": "15+ Years Clinical Practice",
+    "description": "Dr. Jeevan Atole is a renowned Ayurvedic physician specializing in Panchakarma detoxification, diabetes management, joint care, and reproductive health.",
+    "quote": "Ayurveda is not merely a treatment; it is a way of living in harmony with nature."
+  },
+  "journey": {
+    "tag": "PATIENT JOURNEY",
+    "heading": "Your Path to Natural Recovery",
+    "step1Title": "1. Consultation",
+    "step1Desc": "Detailed Nadi Pariksha & Health Evaluation",
+    "step2Title": "2. Diagnosis",
+    "step2Desc": "Identifying Dosha imbalance & root cause",
+    "step3Title": "3. Treatment Plan",
+    "step3Desc": "Custom Herbal Medicines & Panchakarma",
+    "step4Title": "4. Rejuvenation",
+    "step4Desc": "Follow-up, Diet & Lifestyle guidance"
+  },
+  "knowledge": {
+    "tag": "KNOWLEDGE CENTER",
+    "heading": "Ayurvedic Health Insights & Articles",
+    "subtitle": "Learn healthy living tips and Ayurvedic wellness advice.",
+    "readMore": "Read Full Article",
+    "publishedOn": "Published"
+  },
+  "gallery": {
+    "tag": "CLINIC GALLERY",
+    "heading": "Explore Our Clinic & Panchakarma Facilities",
+    "subtitle": "Take a glimpse into our modern, hygienic Ayurvedic wellness centre.",
+    "categoryAll": "All Photos",
+    "categoryTherapies": "Therapy Rooms",
+    "categoryClinic": "Clinic Facilities"
+  },
+  "testimonials": {
+    "tag": "TESTIMONIALS",
+    "heading": "What Our Patients Say",
+    "subtitle": "Real healing stories from patients who restored their health with us.",
+    "item1": "Panchakarma treatment relieved my chronic joint pain significantly. Highly recommended!",
+    "item2": "Excellent Ayurvedic care for diabetes. Dr. Atole's guidance helped stabilize my sugar levels naturally.",
+    "item3": "Very clean clinic and attentive staff. The soothing Panchakarma massage was truly rejuvenating."
+  },
+  "faq": {
+    "tag": "FREQUENTLY ASKED QUESTIONS",
+    "heading": "Answers to Common Questions",
+    "subtitle": "Find clear answers about Ayurvedic treatments and appointments.",
+    "q1": "What is Panchakarma and who needs it?",
+    "a1": "Panchakarma is a 5-step Ayurvedic detoxification procedure that cleanses accumulated toxins from the body and restores Dosha balance.",
+    "q2": "Are Ayurvedic medicines safe to take with allopathy?",
+    "a2": "Yes, under proper medical guidance, Ayurvedic herbal formulations can be safely integrated into your health routine.",
+    "q3": "How long does a Panchakarma treatment session take?",
+    "a3": "Individual sessions usually take 45 to 75 minutes. A complete Panchakarma therapy package spans 7, 14, or 21 days based on diagnosis.",
+    "q4": "Do I need a prior appointment for consultation?",
+    "a4": "Yes, prior booking is recommended to ensure minimal waiting time and dedicated consultation time with the doctor.",
+    "q5": "What clinic hours are you open?",
+    "a5": "We are open Monday to Saturday from 10:00 AM to 9:00 PM. Sunday is closed."
+  },
+  "contact": {
+    "tag": "GET IN TOUCH",
+    "heading": "Visit Our Pune Clinic",
+    "addressLabel": "Address",
+    "addressVal": "Flat No. 5, Survey No. 24, A Wing, Vishrantinagar Society, near HDFC Bank, in front of Ranka Jewellers lane, Sinhagad Road, Vithalwadi, Pune - 411051.",
+    "phoneLabel": "Phone",
+    "hoursLabel": "Working Hours",
+    "hoursVal": "Monday - Saturday: 10:00 AM - 9:00 PM (Sunday Closed)",
+    "getDirections": "Get Directions on Map"
+  },
+  "appointment": {
+    "tag": "BOOK APPOINTMENT",
+    "heading": "Schedule Your Ayurvedic Consultation",
+    "subtitle": "Fill in your details below to request a doctor appointment.",
+    "nameLabel": "Full Name *",
+    "namePlaceholder": "Enter your full name",
+    "phoneLabel": "Phone Number *",
+    "phonePlaceholder": "Enter 10-digit mobile number",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "name@example.com (optional)",
+    "treatmentLabel": "Select Treatment Category",
+    "treatmentDefault": "General Ayurvedic Consultation",
+    "dateLabel": "Preferred Date *",
+    "timeLabel": "Preferred Time Slot *",
+    "notesLabel": "Health Concern / Message",
+    "notesPlaceholder": "Describe your health symptoms or queries (optional)",
+    "submitBtn": "Confirm & Book Appointment",
+    "submittingBtn": "Booking Appointment...",
+    "successTitle": "Appointment Request Submitted Successfully!",
+    "successMessage": "Your appointment request has been recorded. Booking ID: ",
+    "errorTitle": "Unable to Book Appointment"
+  },
+  "footer": {
+    "brandSub": "Nature Cure Ayurvedic Clinic & Panchakarma Centre",
+    "quickLinks": "Quick Links",
+    "careTitle": "Ayurvedic Care",
+    "contactTitle": "Get in Touch",
+    "callUs": "Call: 9822510456",
+    "altCall": "Alt: 9035051086",
+    "whatsappUs": "WhatsApp Us",
+    "hours": "Monday - Saturday: 10:00 AM - 9:00 PM",
+    "directions": "Get Directions",
+    "copyright": "© Jeevanjyot Nature Cure Ayurvedic Clinic & Panchakarma Centre. All rights reserved.",
+    "disclaimer": "Website information is for general awareness and does not replace professional medical consultation."
+  },
+  "mobileBar": {
+    "call": "Call",
+    "whatsapp": "WhatsApp",
+    "book": "Book"
+  }
+}
