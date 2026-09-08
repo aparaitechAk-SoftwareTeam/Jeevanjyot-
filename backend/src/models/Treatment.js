@@ -19,15 +19,31 @@ const treatmentSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: ["Ayurveda", "Panchakarma", "Specialized Care", "Wellness"],
+      enum: [
+        "Ayurveda",
+        "Panchakarma",
+        "Specialized Care",
+        "Wellness",
+        "Treatment",
+        "Massage",
+        "Management",
+        "Skin Care",
+        "Therapy",
+        "Services",
+        "Body Care",
+        "Surgery",
+        "Gender",
+        "Amenities",
+      ],
       default: "Ayurveda",
     },
 
     description: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
       maxlength: 3000,
+      default: "",
     },
 
     duration: {
