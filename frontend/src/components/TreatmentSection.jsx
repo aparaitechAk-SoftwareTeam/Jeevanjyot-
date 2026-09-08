@@ -17,6 +17,10 @@ import {
   Layers,
 } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
+import {
+  getTranslatedTreatmentName,
+  filterTreatmentsBySearch,
+} from "../utils/treatmentTranslations";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
@@ -47,7 +51,7 @@ const CATEGORY_ICONS = {
 };
 
 export default function TreatmentSection() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [dbTreatments, setDbTreatments] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Treatment");
   const [search, setSearch] = useState("");
@@ -101,19 +105,13 @@ export default function TreatmentSection() {
     return counts;
   }, [dbTreatments, categoriesList]);
 
-  // Filtered treatments by selected category & optional search
+  // Filtered treatments by selected category & optional multi-language search
   const filteredTreatments = useMemo(() => {
-    return dbTreatments.filter((item) => {
-      const matchesCategory = item.category === selectedCategory;
-      const query = search.trim().toLowerCase();
-      const matchesSearch =
-        !query ||
-        [item.name, item.description, item.duration]
-          .filter(Boolean)
-          .some((val) => val.toLowerCase().includes(query));
-      return matchesCategory && matchesSearch;
-    });
-  }, [dbTreatments, selectedCategory, search]);
+    const categoryTreatments = dbTreatments.filter(
+      (item) => item.category === selectedCategory
+    );
+    return filterTreatmentsBySearch(categoryTreatments, search, language);
+  }, [dbTreatments, selectedCategory, search, language]);
 
   return (
     <section
@@ -373,7 +371,7 @@ export default function TreatmentSection() {
 
                           {/* Title */}
                           <h4 className="mt-5 text-lg font-bold leading-snug text-[#123C2A] group-hover:text-[#0B291D]">
-                            {treatment.name}
+                            {getTranslatedTreatmentName(treatment.name, language)}
                           </h4>
 
                           {/* Description */}

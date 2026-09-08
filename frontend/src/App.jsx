@@ -7,6 +7,7 @@ import AboutPage from "./pages/AboutPage";
 import TreatmentsPage from "./pages/TreatmentsPage";
 import PanchakarmaPage from "./pages/PanchakarmaPage";
 import DoctorPage from "./pages/DoctorPage";
+import ReviewsPage from "./pages/ReviewsPage";
 import KnowledgeCenterPage from "./pages/KnowledgeCenterPage";
 import GalleryPage from "./pages/GalleryPage";
 import ContactPage from "./pages/ContactPage";
@@ -51,6 +52,7 @@ export default function App() {
           <Route path="/treatments" element={<TreatmentsPage />} />
           <Route path="/panchakarma" element={<PanchakarmaPage />} />
           <Route path="/doctor" element={<DoctorPage />} />
+          <Route path="/reviews" element={<ReviewsPage />} />
           <Route path="/knowledge-center" element={<KnowledgeCenterPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/contact" element={<ContactPage />} />

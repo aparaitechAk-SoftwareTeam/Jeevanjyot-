@@ -13,6 +13,7 @@ const treatmentRoutes = require("./src/routes/treatmentRoutes");
 const contentRoutes = require("./src/routes/contentRoutes");
 const recordsRoutes = require("./src/routes/recordsRoutes");
 const patientPortalRoutes = require("./src/routes/patientPortalRoutes");
+const reviewRoutes = require("./src/routes/reviewRoutes");
 
 const app = express();
 
@@ -62,6 +63,7 @@ app.use("/api/admin", recordsRoutes);
 app.use("/api/doctors", doctorRoutes);
 app.use("/api/treatments", treatmentRoutes);
 app.use("/api/patient", patientPortalRoutes);
+app.use("/api", reviewRoutes);
 app.use("/api", contentRoutes);
 
 app.get("/api/health", (req, res) => {
@@ -70,6 +72,17 @@ app.get("/api/health", (req, res) => {
     message: "Jeevanjyot API is running",
     timestamp: new Date().toISOString(),
   });
+});
+
+// JSON fallback for unmatched API routes (prevents HTML 404 responses for API requests)
+app.use((req, res, next) => {
+  if (req.originalUrl.startsWith("/api")) {
+    return res.status(404).json({
+      success: false,
+      message: `API endpoint '${req.originalUrl}' not found.`,
+    });
+  }
+  next();
 });
 
 const startServer = async () => {

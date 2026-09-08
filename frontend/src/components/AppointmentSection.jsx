@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   CalendarDays,
@@ -13,22 +13,21 @@ import {
   MessageSquare,
   Leaf,
   ChevronRight,
+  ChevronDown,
+  Search,
+  X,
+  Check,
 } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
+import {
+  getTranslatedTreatmentName,
+  filterTreatmentsBySearch,
+} from "../utils/treatmentTranslations";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 export default function AppointmentSection() {
-  const { t } = useLanguage();
-
-  const careOptions = [
-    t("treatments.ayurvedaTitle", "Ayurvedic Care"),
-    t("treatments.panchakarmaTitle", "Panchakarma"),
-    t("treatments.diabetesTitle", "Diabetes Care"),
-    t("treatments.infertilityTitle", "Infertility Care"),
-    t("specialized.jointCare", "Nature Cure"),
-    t("hero.badge", "Personalized Wellness"),
-  ];
+  const { t, language } = useLanguage();
 
   const [form, setForm] = useState({
     patientName: "",
@@ -42,6 +41,13 @@ export default function AppointmentSection() {
   });
 
   const [doctors, setDoctors] = useState([]);
+  const [dbTreatments, setDbTreatments] = useState([]);
+  const [treatmentsLoading, setTreatmentsLoading] = useState(true);
+  const [treatmentsError, setTreatmentsError] = useState("");
+  const [treatmentSearchQuery, setTreatmentSearchQuery] = useState("");
+  const [treatmentDropdownOpen, setTreatmentDropdownOpen] = useState(false);
+  const treatmentDropdownRef = useRef(null);
+
   const [availableSlots, setAvailableSlots] = useState([]);
   const [isHoliday, setIsHoliday] = useState(false);
   const [holidayReason, setHolidayReason] = useState("");
@@ -50,6 +56,63 @@ export default function AppointmentSection() {
   const [slotsLoading, setSlotsLoading] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+
+  // Fetch active treatments from DB/API
+  useEffect(() => {
+    const fetchActiveTreatments = async () => {
+      try {
+        setTreatmentsLoading(true);
+        setTreatmentsError("");
+        const response = await fetch(`${API_URL}/treatments`);
+        if (!response.ok) {
+          throw new Error("Unable to load treatments.");
+        }
+        const data = await response.json();
+        if (data.success && Array.isArray(data.treatments)) {
+          // Filter active treatments only (isActive !== false)
+          const activeOnly = data.treatments.filter((tItem) => tItem.isActive !== false);
+          setDbTreatments(activeOnly);
+        } else {
+          throw new Error("Failed to load treatments list.");
+        }
+      } catch (err) {
+        console.error("Fetch treatments for appointment error:", err);
+        setTreatmentsError("Unable to load treatments. Please try again.");
+      } finally {
+        setTreatmentsLoading(false);
+      }
+    };
+
+    fetchActiveTreatments();
+  }, []);
+
+  // Click outside and keydown listener for treatment dropdown
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        treatmentDropdownRef.current &&
+        !treatmentDropdownRef.current.contains(event.target)
+      ) {
+        setTreatmentDropdownOpen(false);
+      }
+    }
+    function handleKeyDown(event) {
+      if (event.key === "Escape") {
+        setTreatmentDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  // Instant client-side search filtering for active treatments with multi-language support
+  const filteredDbTreatments = useMemo(() => {
+    return filterTreatmentsBySearch(dbTreatments, treatmentSearchQuery, language);
+  }, [dbTreatments, treatmentSearchQuery, language]);
 
   // Fetch doctors list for appointment select
   useEffect(() => {
@@ -332,34 +395,147 @@ export default function AppointmentSection() {
 
               {/* Treatment Category & Doctor */}
               <div className="grid gap-5 sm:grid-cols-2">
-                <div className={doctors.length > 0 ? "" : "sm:col-span-2"}>
+                <div className={doctors.length > 0 ? "" : "sm:col-span-2"} ref={treatmentDropdownRef}>
                   <label className="mb-1.5 flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#17231C]">
                     <span>
-                      {t("appointment.treatmentLabel", "Treatment Category")}{" "}
+                      {t("appointment.treatmentLabel", "Select Treatment")}{" "}
                       <span className="text-rose-500">*</span>
                     </span>
                   </label>
+
                   <div className="relative">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-[#66736B]">
-                      <Stethoscope size={17} />
-                    </div>
-                    <select
+                    {/* Searchable Treatment Dropdown Trigger */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!treatmentsLoading && !treatmentsError && dbTreatments.length > 0) {
+                          setTreatmentDropdownOpen((prev) => !prev);
+                        }
+                      }}
+                      disabled={treatmentsLoading || !!treatmentsError || dbTreatments.length === 0}
+                      className={`w-full text-left rounded-2xl border border-[#123C2A]/15 bg-[#F7F3E8]/40 pl-10 pr-10 py-3 text-sm text-[#17231C] outline-none transition-all duration-200 hover:border-[#123C2A]/30 focus:border-[#123C2A] focus:bg-white focus:ring-4 focus:ring-[#123C2A]/8 flex items-center justify-between ${
+                        treatmentsLoading || !!treatmentsError || dbTreatments.length === 0
+                          ? "cursor-not-allowed opacity-75"
+                          : "cursor-pointer"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 truncate">
+                        <Stethoscope size={17} className="text-[#66736B] shrink-0" />
+                        <span
+                          className={
+                            form.care
+                              ? "font-semibold text-[#123C2A] truncate"
+                              : "text-[#66736B]/70 truncate"
+                          }
+                        >
+                          {treatmentsLoading
+                            ? "Loading treatments..."
+                            : treatmentsError
+                            ? "Unable to load treatments. Please try again."
+                            : dbTreatments.length === 0
+                            ? "No treatments are currently available."
+                            : form.care
+                            ? getTranslatedTreatmentName(form.care, language)
+                            : t("appointment.treatmentDefault", "Select treatment")}
+                        </span>
+                      </div>
+
+                      <ChevronDown
+                        size={16}
+                        className={`text-[#66736B] shrink-0 transition-transform duration-200 ${
+                          treatmentDropdownOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+
+                    {/* Hidden input for browser native required form validation */}
+                    <input
+                      type="text"
                       name="care"
                       value={form.care}
-                      onChange={handleChange}
+                      onChange={() => {}}
                       required
-                      className="w-full cursor-pointer appearance-none rounded-2xl border border-[#123C2A]/15 bg-[#F7F3E8]/40 pl-10 pr-4 py-3 text-sm text-[#17231C] outline-none transition-all duration-200 hover:border-[#123C2A]/30 focus:border-[#123C2A] focus:bg-white focus:ring-4 focus:ring-[#123C2A]/8"
-                    >
-                      <option value="">{t("appointment.treatmentDefault", "Select care option")}</option>
-                      {careOptions.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-[#66736B]">
-                      <ChevronRight size={16} className="rotate-90" />
-                    </div>
+                      tabIndex={-1}
+                      className="sr-only"
+                    />
+
+                    {/* Searchable Dropdown Overlay */}
+                    {treatmentDropdownOpen && (
+                      <div className="absolute left-0 right-0 top-full mt-2 z-50 rounded-2xl border border-[#123C2A]/15 bg-white p-3 shadow-2xl shadow-[#123C2A]/15">
+                        {/* Search Input Box */}
+                        <div className="relative mb-2.5">
+                          <Search
+                            size={15}
+                            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#789B82] pointer-events-none"
+                          />
+                          <input
+                            type="text"
+                            value={treatmentSearchQuery}
+                            onChange={(e) => setTreatmentSearchQuery(e.target.value)}
+                            placeholder="Search treatment..."
+                            className="w-full h-10 rounded-xl border border-[#123C2A]/15 bg-[#F7F3E8]/50 pl-9 pr-8 text-xs font-medium text-[#123C2A] placeholder-[#66736B] outline-none focus:border-[#789B82] focus:bg-white focus:ring-2 focus:ring-[#789B82]/20"
+                            autoFocus
+                          />
+                          {treatmentSearchQuery && (
+                            <button
+                              type="button"
+                              onClick={() => setTreatmentSearchQuery("")}
+                              className="absolute right-2.5 top-1/2 -translate-y-1/2 flex h-4 w-4 items-center justify-center rounded-full bg-[#123C2A]/10 text-[#123C2A] hover:bg-[#123C2A] hover:text-white transition"
+                            >
+                              <X size={10} />
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Scrollable Treatment Options List */}
+                        <div className="max-h-56 overflow-y-auto space-y-1 pr-1">
+                          {filteredDbTreatments.length === 0 ? (
+                            <div className="py-4 text-center text-xs text-[#66736B]">
+                              No treatments match your search.
+                            </div>
+                          ) : (
+                            filteredDbTreatments.map((tItem) => {
+                              const name = tItem.name || tItem.title;
+                              const translatedName = getTranslatedTreatmentName(name, language);
+                              const isSelected = form.care === name;
+
+                              return (
+                                <button
+                                  type="button"
+                                  key={tItem._id || name}
+                                  onClick={() => {
+                                    setForm((prev) => ({ ...prev, care: name }));
+                                    setTreatmentDropdownOpen(false);
+                                    setTreatmentSearchQuery("");
+                                  }}
+                                  className={`w-full text-left rounded-xl px-3 py-2.5 text-xs font-medium transition flex items-center justify-between gap-2 ${
+                                    isSelected
+                                      ? "bg-[#123C2A] text-white font-semibold"
+                                      : "text-[#17231C] hover:bg-[#F7F3E8]"
+                                  }`}
+                                >
+                                  <div className="truncate">
+                                    <span>{translatedName}</span>
+                                    {tItem.category && (
+                                      <span
+                                        className={`ml-2 text-[10px] ${
+                                          isSelected ? "text-white/70" : "text-[#66736B]"
+                                        }`}
+                                      >
+                                        ({tItem.category})
+                                      </span>
+                                    )}
+                                  </div>
+                                  {isSelected && (
+                                    <Check size={14} className="shrink-0 text-[#C5A45D]" />
+                                  )}
+                                </button>
+                              );
+                            })
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 

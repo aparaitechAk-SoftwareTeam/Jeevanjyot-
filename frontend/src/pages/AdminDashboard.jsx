@@ -8,6 +8,7 @@ import PrescriptionsManagement from "./PrescriptionsManagement";
 import ReportsManagement from "./ReportsManagement";
 import NotificationsManagement from "./NotificationsManagement";
 import SettingsManagement from "./SettingsManagement";
+import ReviewsManagement from "./ReviewsManagement";
 import {
   LayoutDashboard,
   CalendarDays,
@@ -37,6 +38,7 @@ import {
   RefreshCw,
   UserRound,
   Activity,
+  Star,
 } from "lucide-react";
 
 const API_URL =
@@ -83,6 +85,12 @@ const sidebarItems = [
     label: "Reports",
     icon: FileText,
     key: "reports",
+    available: true,
+  },
+  {
+    label: "Reviews",
+    icon: Star,
+    key: "reviews",
     available: true,
   },
   {
@@ -589,6 +597,8 @@ export default function AdminDashboard() {
             <PrescriptionsManagement logout={logout} />
           ) : activeSection === "reports" ? (
             <ReportsManagement logout={logout} />
+          ) : activeSection === "reviews" ? (
+            <ReviewsManagement logout={logout} />
           ) : activeSection === "notifications" ? (
             <NotificationsManagement logout={logout} />
           ) : activeSection === "settings" ? (

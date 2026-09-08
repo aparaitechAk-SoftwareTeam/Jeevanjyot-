@@ -85,7 +85,7 @@ export default function Navbar() {
         </Link>
 
         {/* Center Navigation Links */}
-        <div className="hidden xl:flex items-center gap-3 xl:gap-4 2xl:gap-5 shrink-0">
+        <div className="hidden lg:flex items-center gap-2 lg:gap-3 xl:gap-4 2xl:gap-5 shrink-0">
           {navItems.map((item) => (
             <NavLink
               key={item.key}
@@ -168,7 +168,7 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setMobileMenu(!mobileMenu)}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-[#123C2A]/15 text-[#123C2A] xl:hidden shrink-0"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-[#123C2A]/15 text-[#123C2A] lg:hidden shrink-0"
         >
           {mobileMenu ? <X size={20} /> : <Menu size={20} />}
         </button>
@@ -180,7 +180,7 @@ export default function Navbar() {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          className="border-t border-[#123C2A]/10 bg-[#F7F3E8] px-5 py-5 xl:hidden"
+          className="border-t border-[#123C2A]/10 bg-[#F7F3E8] px-5 py-5 lg:hidden"
         >
           <div className="flex flex-col gap-1">
             <LanguageSelector isMobile={true} />
