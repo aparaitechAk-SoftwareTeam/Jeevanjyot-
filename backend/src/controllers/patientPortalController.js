@@ -90,6 +90,7 @@ exports.getPatientProfile = async (req, res) => {
 // GET /api/patient/appointments
 exports.getPatientAppointments = async (req, res) => {
   try {
+    const Review = require("../models/Review");
     const patient = await Patient.findById(req.patient.id);
     if (!patient) return res.status(404).json({ success: false, message: "Patient not found." });
 
@@ -97,7 +98,22 @@ exports.getPatientAppointments = async (req, res) => {
       .sort({ createdAt: -1 })
       .lean();
 
-    res.json({ success: true, appointments });
+    const reviews = await Review.find({ patientId: patient._id }).lean();
+    const reviewMap = new Map();
+    reviews.forEach((r) => {
+      reviewMap.set(r.appointmentId.toString(), r);
+    });
+
+    const appointmentsWithReview = appointments.map((a) => {
+      const rev = reviewMap.get(a._id.toString());
+      return {
+        ...a,
+        hasReview: Boolean(rev),
+        review: rev || null,
+      };
+    });
+
+    res.json({ success: true, appointments: appointmentsWithReview });
   } catch (error) {
     res.status(500).json({ success: false, message: "Failed to fetch appointments." });
   }

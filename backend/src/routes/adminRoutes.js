@@ -29,6 +29,7 @@ const { getAnalytics, getAuditLogs } = require("../controllers/analyticsControll
 const { getReportsSummary, exportAppointmentsCSV } = require("../controllers/reportsController");
 const { getNotifications, getNotificationById, retryNotification } = require("../controllers/notificationController");
 const { getSettings, updateSettings, getHolidays, createHoliday, updateHoliday, deleteHoliday } = require("../controllers/settingsController");
+const { getAdminReviews, approveAdminReview, rejectAdminReview, deleteAdminReview, replyAdminReview } = require("../controllers/reviewController");
 const { forgotPassword, resetPassword } = require("../controllers/authController");
 const checkRole = require("../middleware/checkRole");
 
@@ -199,5 +200,16 @@ router.get("/holidays", requireAdmin, getHolidays);
 router.post("/holidays", requireAdmin, checkRole(["SUPER_ADMIN", "MANAGER", "RECEPTIONIST"]), createHoliday);
 router.patch("/holidays/:id", requireAdmin, checkRole(["SUPER_ADMIN", "MANAGER", "RECEPTIONIST"]), updateHoliday);
 router.delete("/holidays/:id", requireAdmin, checkRole(["SUPER_ADMIN", "MANAGER", "RECEPTIONIST"]), deleteHoliday);
+
+/* =========================
+   REVIEWS MODULE
+========================= */
+router.get("/reviews", requireAdmin, getAdminReviews);
+router.patch("/reviews/:id/approve", requireAdmin, approveAdminReview);
+router.patch("/reviews/:id/reject", requireAdmin, rejectAdminReview);
+router.patch("/reviews/:id/reply", requireAdmin, replyAdminReview);
+router.post("/reviews/:id/reply", requireAdmin, replyAdminReview);
+router.put("/reviews/:id/reply", requireAdmin, replyAdminReview);
+router.delete("/reviews/:id", requireAdmin, deleteAdminReview);
 
 module.exports = router;

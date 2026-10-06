@@ -18,7 +18,22 @@ import {
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
-const CATEGORIES = ["Ayurveda", "Panchakarma", "Specialized Care", "Wellness"];
+const CATEGORIES = [
+  "Ayurveda",
+  "Panchakarma",
+  "Specialized Care",
+  "Wellness",
+  "Treatment",
+  "Massage",
+  "Management",
+  "Skin Care",
+  "Therapy",
+  "Services",
+  "Body Care",
+  "Surgery",
+  "Gender",
+  "Amenities",
+];
 
 const emptyForm = {
   name: "",

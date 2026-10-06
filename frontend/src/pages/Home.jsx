@@ -8,6 +8,7 @@ import {
   Phone,
   HeartPulse,
   Leaf,
+  Star,
 } from "lucide-react";
 
 import TrustHighlights from "../components/TrustHighlights";
@@ -17,6 +18,7 @@ import SpecializedCareSection from "../components/SpecializedCareSection";
 import WhyChooseSection from "../components/WhyChooseSection";
 import DoctorSection from "../components/DoctorSection";
 import PatientJourneySection from "../components/PatientJourneySection";
+import TestimonialsFAQSection from "../components/TestimonialsFAQSection";
 
 import doctorImage from "../assets/doctor.png";
 import { useLanguage } from "../context/LanguageContext";
@@ -132,8 +134,28 @@ export default function Home() {
               duration: 0.85,
               ease: [0.25, 0.1, 0.25, 1.0],
             }}
-            className="relative"
+            className="relative flex flex-col items-end gap-3.5"
           >
+            {/* Top-Right Reviews & Ratings Badge (OUTSIDE image container) */}
+            <Link
+              to="/reviews"
+              title={t("nav.reviews", "Reviews & Ratings")}
+              className="inline-flex items-center gap-2 sm:gap-2.5 rounded-full border border-[#123C2A]/15 bg-white px-4 py-2.5 text-[#123C2A] shadow-md transition-all duration-300 hover:bg-[#123C2A] hover:text-white hover:scale-105 hover:shadow-lg hover:border-[#123C2A] group/badge"
+            >
+              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#123C2A]/10 text-[#123C2A] group-hover/badge:bg-[#C5A45D]/20 group-hover/badge:text-[#C5A45D] transition-colors">
+                <Star size={14} className="fill-[#C5A45D] text-[#C5A45D]" />
+              </div>
+              <div className="text-left leading-none pr-1">
+                <span className="block text-[10px] font-bold uppercase tracking-wider text-[#789B82] group-hover/badge:text-[#C5A45D] transition-colors">
+                  {t("nav.reviews", "Reviews & Ratings")}
+                </span>
+                <span className="block text-[11px] font-semibold text-[#123C2A] mt-0.5 group-hover/badge:text-white transition-colors">
+                  ★ 5.0 Patient Care
+                </span>
+              </div>
+              <ArrowRight size={14} className="text-[#789B82] transition-transform duration-200 group-hover/badge:translate-x-0.5 group-hover/badge:text-[#C5A45D]" />
+            </Link>
+
             {/* Outer Card with Floating Motion & Hover Interaction */}
             <motion.div
               animate={
@@ -155,7 +177,7 @@ export default function Home() {
                   ? {}
                   : { scale: 1.015, y: -2 }
               }
-              className="group relative overflow-hidden rounded-[2.5rem] border border-[#123C2A]/10 bg-gradient-to-tr from-[#123C2A] via-[#0B291D] to-[#789B82] p-3 shadow-2xl transition-shadow duration-500 hover:shadow-[0_25px_60px_rgba(11,41,29,0.25)]"
+              className="group relative w-full overflow-hidden rounded-[2.5rem] border border-[#123C2A]/10 bg-gradient-to-tr from-[#123C2A] via-[#0B291D] to-[#789B82] p-3 shadow-2xl transition-shadow duration-500 hover:shadow-[0_25px_60px_rgba(11,41,29,0.25)]"
             >
               {/* Image Container with Depth Hover Zoom */}
               <div className="overflow-hidden rounded-[2rem]">
@@ -253,6 +275,7 @@ export default function Home() {
       <WhyChooseSection />
       <DoctorSection />
       <PatientJourneySection />
+      <TestimonialsFAQSection />
 
       {/* Home Final Call to Action */}
       <section className="bg-[#123C2A] py-16 text-center text-white">

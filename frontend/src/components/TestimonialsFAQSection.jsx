@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MessageSquareQuote,
@@ -6,24 +6,33 @@ import {
   HelpCircle,
   ShieldCheck,
   Star,
+  UserCheck,
 } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
+import { getTranslatedTreatmentName } from "../utils/treatmentTranslations";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 export default function TestimonialsFAQSection() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [openIndex, setOpenIndex] = useState(0);
 
   const [dbFaqs, setDbFaqs] = useState([]);
-  const [dbTestimonials, setDbTestimonials] = useState([]);
+  const [dbReviews, setDbReviews] = useState([]);
+  const [selectedTreatment, setSelectedTreatment] = useState("All");
+  const [reviewSummary, setReviewSummary] = useState({
+    averageRating: 0,
+    totalApprovedReviews: 0,
+    ratingDistribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+  });
 
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const [resFaq, resTest] = await Promise.all([
+        const [resFaq, resRev, resSum] = await Promise.all([
           fetch(`${API_URL}/faqs`),
-          fetch(`${API_URL}/testimonials`),
+          fetch(`${API_URL}/reviews`),
+          fetch(`${API_URL}/reviews/summary`),
         ]);
 
         if (resFaq.ok) {
@@ -33,14 +42,21 @@ export default function TestimonialsFAQSection() {
           }
         }
 
-        if (resTest.ok) {
-          const dataT = await resTest.json();
-          if (dataT.success && Array.isArray(dataT.testimonials) && dataT.testimonials.length > 0) {
-            setDbTestimonials(dataT.testimonials);
+        if (resRev.ok) {
+          const dataR = await resRev.json();
+          if (dataR.success && Array.isArray(dataR.reviews)) {
+            setDbReviews(dataR.reviews);
+          }
+        }
+
+        if (resSum.ok) {
+          const dataS = await resSum.json();
+          if (dataS.success && dataS.summary) {
+            setReviewSummary(dataS.summary);
           }
         }
       } catch (err) {
-        // Fallback to defaults on error
+        // Fallback on network issue
       }
     };
 
@@ -72,20 +88,45 @@ export default function TestimonialsFAQSection() {
 
   const defaultExperiences = [
     {
-      title: t("testimonials.item1", "Panchakarma treatment relieved my chronic joint pain significantly. Highly recommended!"),
-      text: "Patient feedback for authentic Panchakarma care.",
+      patientName: "Verified Patient",
+      treatmentCare: "Panchakarma Care",
+      doctorName: "Dr. Jeevan Atole",
+      rating: 5,
+      reviewText: t("testimonials.item1", "Panchakarma treatment relieved my chronic joint pain significantly. Highly recommended!"),
+      isVerified: true,
+      adminReply: "Thank you for sharing your experience. Glad to see positive recovery!",
+      repliedBy: "Dr. Jeevan Atole",
     },
     {
-      title: t("testimonials.item2", "Excellent Ayurvedic care for diabetes. Dr. Atole's guidance helped stabilize my sugar levels naturally."),
-      text: "Patient experience with diabetes lifestyle management.",
+      patientName: "Verified Patient",
+      treatmentCare: "Diabetes Management",
+      doctorName: "Dr. Jeevan Atole",
+      rating: 5,
+      reviewText: t("testimonials.item2", "Excellent Ayurvedic care for diabetes. Dr. Atole's guidance helped stabilize my sugar levels naturally."),
+      isVerified: true,
     },
     {
-      title: t("testimonials.item3", "Very clean clinic and attentive staff. The soothing Panchakarma massage was truly rejuvenating."),
-      text: "Patient experience at Jeevanjyot Clinic.",
+      patientName: "Verified Patient",
+      treatmentCare: "Ayurvedic Consultation",
+      doctorName: "Dr. Jeevan Atole",
+      rating: 5,
+      reviewText: t("testimonials.item3", "Very clean clinic and attentive staff. The soothing Panchakarma massage was truly rejuvenating."),
+      isVerified: true,
     },
   ];
 
   const faqList = dbFaqs.length > 0 ? dbFaqs : defaultFaqs;
+  const reviewList = dbReviews.length > 0 ? dbReviews : defaultExperiences;
+
+  const treatmentCategories = useMemo(() => {
+    const list = reviewList.map((r) => r.treatmentCare).filter(Boolean);
+    return ["All", ...new Set(list)];
+  }, [reviewList]);
+
+  const filteredReviews = useMemo(() => {
+    if (selectedTreatment === "All") return reviewList;
+    return reviewList.filter((r) => r.treatmentCare === selectedTreatment);
+  }, [reviewList, selectedTreatment]);
 
   return (
     <section
@@ -120,78 +161,163 @@ export default function TestimonialsFAQSection() {
         </motion.div>
 
         {/* Main Content */}
-        <div className="mt-14 grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+        <div className="mt-14 grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
 
-          {/* Patient Experience / Testimonials */}
+          {/* Patient Reviews & Ratings Column */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.6 }}
-            className="rounded-[2rem] bg-[#123C2A] p-7 shadow-[0_20px_60px_rgba(18,60,42,0.16)] sm:p-9"
+            className="rounded-[2rem] bg-[#123C2A] p-7 shadow-[0_20px_60px_rgba(18,60,42,0.16)] sm:p-9 text-white"
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#C5A45D]/15 text-[#C5A45D]">
-              <MessageSquareQuote size={23} />
+            <div className="flex items-center justify-between">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#C5A45D]/15 text-[#C5A45D]">
+                <MessageSquareQuote size={23} />
+              </div>
+
+              {reviewSummary.totalApprovedReviews > 0 && (
+                <div className="text-right">
+                  <div className="flex items-center gap-1 justify-end">
+                    <Star size={16} className="fill-[#C5A45D] text-[#C5A45D]" />
+                    <span className="text-xl font-bold text-[#F7F3E8]">
+                      {reviewSummary.averageRating}
+                    </span>
+                    <span className="text-xs text-white/60">/ 5</span>
+                  </div>
+                  <p className="text-[11px] text-white/60">
+                    Based on {reviewSummary.totalApprovedReviews} verified {reviewSummary.totalApprovedReviews === 1 ? "review" : "reviews"}
+                  </p>
+                </div>
+              )}
             </div>
 
             <h3 className="mt-6 font-serif text-2xl font-semibold text-[#F7F3E8] sm:text-3xl">
-              {t("testimonials.heading", "What Our Patients Say")}
+              {t("testimonials.heading", "Verified Patient Reviews")}
             </h3>
 
-            <p className="mt-4 text-sm leading-7 text-white/65">
-              {t("testimonials.subtitle", "Real healing stories from patients who restored their health with us.")}
+            <p className="mt-3 text-sm leading-6 text-white/70">
+              {t("testimonials.subtitle", "Authentic experiences shared by verified patients who completed care at Jeevanjyot.")}
             </p>
 
-            <div className="mt-8 space-y-4">
-              {dbTestimonials.length > 0
-                ? dbTestimonials.map((item) => (
-                    <div
-                      key={item._id || item.patientName}
-                      className="rounded-2xl border border-white/10 bg-white/5 p-5"
-                    >
-                      <div className="flex justify-between items-center mb-1">
-                        <h4 className="text-sm font-semibold text-white">
-                          {item.patientName}
-                        </h4>
-                        <div className="flex text-[#C5A45D]">
-                          {[...Array(item.rating || 5)].map((_, i) => (
-                            <Star key={i} size={12} fill="#C5A45D" />
-                          ))}
-                        </div>
+            {/* RATING BARS (If reviews exist) */}
+            {reviewSummary.totalApprovedReviews > 0 && (
+              <div className="mt-5 border-t border-b border-white/10 py-4 space-y-1.5 text-xs">
+                {[5, 4, 3, 2, 1].map((star) => {
+                  const count = reviewSummary.ratingDistribution?.[star] || 0;
+                  const pct =
+                    reviewSummary.totalApprovedReviews > 0
+                      ? Math.round((count / reviewSummary.totalApprovedReviews) * 100)
+                      : 0;
+
+                  return (
+                    <div key={star} className="flex items-center gap-2 text-white/70">
+                      <span className="w-5 text-right font-medium">{star}★</span>
+                      <div className="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
+                        <div
+                          className="h-full bg-[#C5A45D] transition-all duration-500"
+                          style={{ width: `${pct}%` }}
+                        />
                       </div>
-                      <p className="text-xs font-medium text-[#789B82]">
-                        {item.treatmentName}
-                      </p>
-                      <p className="mt-2 text-xs leading-6 text-white/70">
-                        "{item.content}"
-                      </p>
+                      <span className="w-8 text-right text-[11px] text-white/50">{count}</span>
                     </div>
-                  ))
-                : defaultExperiences.map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="rounded-2xl border border-white/10 bg-white/5 p-5"
-                    >
+                  );
+                })}
+              </div>
+            )}
+
+            {/* TREATMENT FILTER TABS */}
+            {treatmentCategories.length > 2 && (
+              <div className="mt-5 flex flex-wrap gap-1.5">
+                {treatmentCategories.map((tName) => (
+                  <button
+                    key={tName}
+                    onClick={() => setSelectedTreatment(tName)}
+                    className={`rounded-xl px-3 py-1 text-[11px] font-semibold transition ${
+                      selectedTreatment === tName
+                        ? "bg-[#C5A45D] text-[#123C2A]"
+                        : "bg-white/10 text-white/70 hover:bg-white/20"
+                    }`}
+                  >
+                    {tName}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* REVIEWS CARDS LIST */}
+            <div className="mt-6 space-y-4 max-h-[440px] overflow-y-auto pr-1">
+              {filteredReviews.map((item, idx) => (
+                <div
+                  key={item._id || idx}
+                  className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-xs transition hover:bg-white/10"
+                >
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div>
                       <h4 className="text-sm font-semibold text-white">
-                        {item.title}
+                        {item.patientName || "Verified Patient"}
                       </h4>
+                      <p className="text-[11px] font-medium text-[#789B82] flex items-center gap-1.5">
+                        <span>{getTranslatedTreatmentName(item.treatmentCare, language) || "Ayurvedic Treatment"}</span>
+                        <span className="text-white/30">•</span>
+                        <span className="text-white/70 flex items-center gap-1">
+                          <UserCheck size={11} className="text-[#C5A45D]" />
+                          {item.doctorName || "Dr. Jeevan Atole"}
+                        </span>
+                      </p>
                     </div>
-                  ))}
+
+                    <div className="flex text-[#C5A45D]">
+                      {[...Array(item.rating || 5)].map((_, i) => (
+                        <Star key={i} size={13} fill="#C5A45D" />
+                      ))}
+                    </div>
+                  </div>
+
+                  <p className="mt-2 text-xs leading-relaxed text-white/80">
+                    "{item.reviewText || item.title}"
+                  </p>
+
+                  {/* Doctor / Admin Reply Box */}
+                  {item.adminReply && (
+                    <div className="mt-3 rounded-xl border border-[#C5A45D]/30 bg-[#C5A45D]/10 p-3 text-xs text-[#F7F3E8]">
+                      <div className="flex items-center justify-between text-[#C5A45D] font-semibold text-[11px]">
+                        <span className="flex items-center gap-1">
+                          <MessageSquareQuote size={13} /> Response by {item.repliedBy || item.doctorName || "Dr. Jeevan Atole"}
+                        </span>
+                        {item.repliedAt && (
+                          <span className="text-[10px] text-white/50">
+                            {new Date(item.repliedAt).toLocaleDateString("en-IN", { month: "short", year: "numeric" })}
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-1 text-white/90 italic">"{item.adminReply}"</p>
+                    </div>
+                  )}
+
+                  <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-2 text-[10px] text-white/50">
+                    <span className="inline-flex items-center gap-1 font-semibold text-emerald-400">
+                      <ShieldCheck size={12} /> Verified Patient Review
+                    </span>
+                    {item.createdAt && <span>{new Date(item.createdAt).toLocaleDateString("en-IN", { month: "short", year: "numeric" })}</span>}
+                  </div>
+                </div>
+              ))}
             </div>
 
-            <div className="mt-7 flex items-start gap-3 rounded-2xl border border-[#C5A45D]/20 bg-[#C5A45D]/5 p-4">
+            <div className="mt-6 flex items-start gap-3 rounded-2xl border border-[#C5A45D]/20 bg-[#C5A45D]/5 p-4">
               <ShieldCheck
                 size={18}
                 className="mt-0.5 shrink-0 text-[#C5A45D]"
               />
 
-              <p className="text-xs leading-5 text-white/60">
-                {t("footer.disclaimer", "Only authentic, verified clinic-approved reviews are displayed.")}
+              <p className="text-xs leading-5 text-white/70">
+                {t("footer.disclaimer", "Reviews are submitted by verified patients following completed appointments and moderated for authentic clinic care feedback.")}
               </p>
             </div>
           </motion.div>
 
-          {/* FAQ Accordion */}
+          {/* FAQ Accordion Column */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
